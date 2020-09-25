@@ -1,0 +1,46 @@
+plugins {
+	id 'org.springframework.boot' version '2.2.10.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+	id 'java'
+}
+
+group = 'com.example'
+version = '1.0.0-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter'
+	implementation("org.springframework:spring-messaging")
+	implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-stream
+	compile group: 'org.springframework.cloud', name: 'spring-cloud-stream', version: '1.0.2.RELEASE'
+	// https://mvnrepository.com/artifact/org.springframework.kafka/spring-kafka
+	compile group: 'org.springframework.kafka', name: 'spring-kafka', version: '2.6.1'
+
+
+	// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-stream-dependencies
+	compile group: 'org.springframework.cloud', name: 'spring-cloud-stream-dependencies', version: 'Horsham.SR8', ext: 'pom'
+
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
+}
+
+test {
+	useJUnitPlatform()
+}
+
+bootRun {
+	jvmArgs = [
+			'-Dspring.profiles.active=local',
+			//'-Dspring.output.ansi.enabled=always',
+			'-Dlogging.config=classpath:log4j2-local.xml'
+	]
+	if (project.hasProperty('jvmArgs')) {
+		jvmArgs = (project.jvmArgs.split("\\s+" as Closure) as List)
+	}
+}
